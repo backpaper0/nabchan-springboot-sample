@@ -24,7 +24,24 @@
 		<java.version>1.8</java.version>
 	</properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.nablarch.profile</groupId>
+                <artifactId>nablarch-bom</artifactId>
+                <version>5u12</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 	<dependencies>
+        <dependency>
+              <groupId>com.nablarch.framework</groupId>
+              <artifactId>nablarch-fw-web</artifactId>
+        </dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -50,6 +67,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
 
 </project>
