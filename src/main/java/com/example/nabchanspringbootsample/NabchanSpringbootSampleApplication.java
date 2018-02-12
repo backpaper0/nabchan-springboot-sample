@@ -10,9 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 
-import nablarch.fw.ExecutionContext;
 import nablarch.fw.Handler;
-import nablarch.fw.Request;
 import nablarch.fw.handler.RequestPathJavaPackageMapping;
 import nablarch.fw.web.handler.HttpResponseHandler;
 import nablarch.fw.web.servlet.WebFrontController;
@@ -47,13 +45,8 @@ public class NabchanSpringbootSampleApplication implements ApplicationContextAwa
 
     @Bean
     public RequestPathJavaPackageMapping requestPathJavaPackageMapping() {
-        final RequestPathJavaPackageMapping mapping = new RequestPathJavaPackageMapping() {
-            @Override
-            protected Handler<Request<?>, Object> createHandlerFor(final Object delegate,
-                    final ExecutionContext ctx) {
-                return super.createHandlerFor(applicationContext.getBean(delegate.getClass()), ctx);
-            }
-        };
+        final SpringRequestPathJavaPackageMapping mapping = new SpringRequestPathJavaPackageMapping();
+        mapping.setApplicationContext(applicationContext);
         mapping.setBasePackage("com.example.nabchanspringbootsample.action");
         mapping.setBasePath("/");
         mapping.setClassNameSuffix("Action");
