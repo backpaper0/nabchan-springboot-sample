@@ -25,7 +25,9 @@ public class TodoAction {
             throws JsonProcessingException {
         final EntityList<Todo> entityList = UniversalDao.findAll(Todo.class);
         final Object value = entityList;
-        return new HttpResponse().write(mapper.writeValueAsString(value));
+        return new HttpResponse()
+                .setContentType("application/json")
+                .write(mapper.writeValueAsString(value));
     }
 
     public HttpResponse postCreate(final HttpRequest request, final ExecutionContext context)
@@ -36,6 +38,8 @@ public class TodoAction {
         entity.setContent(form.getContent());
         entity.setDone(false);
         UniversalDao.insert(entity);
-        return new HttpResponse().write(mapper.writeValueAsString(entity));
+        return new HttpResponse()
+                .setContentType("application/json")
+                .write(mapper.writeValueAsString(entity));
     }
 }
