@@ -1,4 +1,4 @@
-package com.example.nabchanspringbootsample.config;
+package com.example.config;
 
 import java.util.ArrayList;
 import java.util.Collection;

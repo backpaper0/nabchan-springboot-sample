@@ -1,4 +1,4 @@
-package com.example.nabchanspringbootsample.service;
+package com.example.service;
 
 public interface HelloService {
 

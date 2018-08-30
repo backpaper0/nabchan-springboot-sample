@@ -1,4 +1,4 @@
-package com.example.nabchanspringbootsample.handler;
+package com.example.handler;
 
 import org.springframework.beans.BeansException;
 import org.springframework.boot.context.properties.ConfigurationProperties;

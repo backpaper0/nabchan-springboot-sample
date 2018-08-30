@@ -1,9 +1,9 @@
-package com.example.nabchanspringbootsample.action;
+package com.example.action;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.nabchanspringbootsample.service.HelloService;
+import com.example.service.HelloService;
 
 import nablarch.fw.ExecutionContext;
 import nablarch.fw.web.HttpRequest;

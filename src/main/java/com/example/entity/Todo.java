@@ -1,4 +1,4 @@
-package com.example.nabchanspringbootsample.entity;
+package com.example.entity;
 
 import java.io.Serializable;
 

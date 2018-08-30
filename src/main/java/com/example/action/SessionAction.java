@@ -1,4 +1,4 @@
-package com.example.nabchanspringbootsample.action;
+package com.example.action;
 
 import java.util.AbstractMap;
 import java.util.Arrays;

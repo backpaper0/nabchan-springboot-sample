@@ -1,4 +1,4 @@
-package com.example.nabchanspringbootsample.form;
+package com.example.form;
 
 public class TodoCreationForm {
 
