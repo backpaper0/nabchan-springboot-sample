@@ -68,9 +68,9 @@ public class AppConfig implements ApplicationContextAware, InitializingBean {
         handlers.add(new GlobalErrorHandler());
         handlers.add(new SecureHandler());
         handlers.add(new HttpResponseHandler());
-        handlers.add(sessionStoreHandler());
         handlers.add(dbConnectionManagementHandler());
         handlers.add(transactionManagementHandler());
+        handlers.add(sessionStoreHandler());
         handlers.add(mapping);
         wfc.setHandlerQueue(handlers);
         return wfc;
