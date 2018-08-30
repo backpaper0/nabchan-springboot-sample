@@ -42,6 +42,10 @@
               <artifactId>nablarch-fw-web</artifactId>
         </dependency>
         <dependency>
+              <groupId>com.nablarch.framework</groupId>
+              <artifactId>nablarch-fw-web-dbstore</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.nablarch.framework</groupId>
             <artifactId>nablarch-common-dao</artifactId>
         </dependency>

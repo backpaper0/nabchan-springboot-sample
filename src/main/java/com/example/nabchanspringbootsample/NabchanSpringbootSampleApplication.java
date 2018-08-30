@@ -21,15 +21,20 @@ import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import nablarch.common.handler.DbConnectionManagementHandler;
 import nablarch.common.handler.TransactionManagementHandler;
 import nablarch.common.web.session.SessionManager;
+import nablarch.common.web.session.SessionStore;
 import nablarch.common.web.session.SessionStoreHandler;
-import nablarch.common.web.session.store.HttpSessionStore;
+import nablarch.common.web.session.store.DbStore;
 import nablarch.core.date.BasicSystemTimeProvider;
 import nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource;
+import nablarch.core.db.connection.ConnectionFactory;
 import nablarch.core.db.dialect.H2Dialect;
 import nablarch.core.db.statement.BasicStatementFactory;
 import nablarch.core.db.transaction.JdbcTransactionFactory;
+import nablarch.core.db.transaction.SimpleDbTransactionManager;
 import nablarch.core.repository.ObjectLoader;
 import nablarch.core.repository.SystemRepository;
+import nablarch.core.repository.initialization.Initializable;
+import nablarch.core.transaction.TransactionFactory;
 import nablarch.fw.Handler;
 import nablarch.fw.handler.GlobalErrorHandler;
 import nablarch.fw.handler.RequestPathJavaPackageMapping;
@@ -73,13 +78,27 @@ public class NabchanSpringbootSampleApplication
     }
 
     @Bean
-    public SessionManager sessionManager() {
-        final HttpSessionStore store = new HttpSessionStore();
-        store.setExpires(1L, TimeUnit.DAYS);
+    public SimpleDbTransactionManager dbManager() {
+        final SimpleDbTransactionManager dbManager = new SimpleDbTransactionManager();
+        dbManager.setConnectionFactory(connectionFactory());
+        dbManager.setTransactionFactory(transactionFactory());
+        return dbManager;
+    }
 
+    @Bean
+    public SessionStore sessionStore() {
+        //        final HttpSessionStore store = new HttpSessionStore();
+        final DbStore store = new DbStore();
+        store.setExpires(1L, TimeUnit.DAYS);
+        store.setDbManager(dbManager());
+        return store;
+    }
+
+    @Bean
+    public SessionManager sessionManager() {
         final SessionManager manager = new SessionManager();
-        manager.setAvailableStores(Collections.singletonList(store));
-        manager.setDefaultStoreName(store.getName());
+        manager.setAvailableStores(Collections.singletonList(sessionStore()));
+        manager.setDefaultStoreName(sessionStore().getName());
         return manager;
     }
 
@@ -102,21 +121,30 @@ public class NabchanSpringbootSampleApplication
 
     @Bean
     public DbConnectionManagementHandler dbConnectionManagementHandler() {
+        final DbConnectionManagementHandler handler = new DbConnectionManagementHandler();
+        handler.setConnectionFactory(connectionFactory());
+        return handler;
+    }
+
+    @Bean
+    public ConnectionFactory connectionFactory() {
         final BasicDbConnectionFactoryForDataSource connectionFactory = new BasicDbConnectionFactoryForDataSource();
         connectionFactory.setDataSource(new TransactionAwareDataSourceProxy(dataSource));
         connectionFactory.setDialect(new H2Dialect());
         connectionFactory.setStatementFactory(new BasicStatementFactory());
-
-        final DbConnectionManagementHandler handler = new DbConnectionManagementHandler();
-        handler.setConnectionFactory(connectionFactory);
-        return handler;
+        return connectionFactory;
     }
 
     @Bean
     public TransactionManagementHandler transactionManagementHandler() {
         final TransactionManagementHandler handler = new TransactionManagementHandler();
-        handler.setTransactionFactory(new JdbcTransactionFactory());
+        handler.setTransactionFactory(transactionFactory());
         return handler;
+    }
+
+    @Bean
+    public TransactionFactory transactionFactory() {
+        return new JdbcTransactionFactory();
     }
 
     @Override
@@ -131,5 +159,9 @@ public class NabchanSpringbootSampleApplication
                 return objects;
             }
         });
+
+        applicationContext.getBeansOfType(Initializable.class)
+                .values()
+                .forEach(Initializable::initialize);
     }
 }
