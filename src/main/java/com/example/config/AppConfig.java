@@ -3,7 +3,6 @@ package com.example.config;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +22,7 @@ import nablarch.common.web.session.SessionStore;
 import nablarch.common.web.session.SessionStoreHandler;
 import nablarch.common.web.session.store.DbStore;
 import nablarch.core.date.BasicSystemTimeProvider;
+import nablarch.core.date.SystemTimeProvider;
 import nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource;
 import nablarch.core.db.connection.ConnectionFactory;
 import nablarch.core.db.dialect.H2Dialect;
@@ -68,9 +68,9 @@ public class AppConfig implements ApplicationContextAware, InitializingBean {
         handlers.add(new GlobalErrorHandler());
         handlers.add(new SecureHandler());
         handlers.add(new HttpResponseHandler());
+        handlers.add(sessionStoreHandler());
         handlers.add(dbConnectionManagementHandler());
         handlers.add(transactionManagementHandler());
-        handlers.add(sessionStoreHandler());
         handlers.add(mapping);
         wfc.setHandlerQueue(handlers);
         return wfc;
@@ -136,16 +136,17 @@ public class AppConfig implements ApplicationContextAware, InitializingBean {
         return new JdbcTransactionFactory();
     }
 
+    @Bean
+    public SystemTimeProvider systemTimeProvider() {
+        return new BasicSystemTimeProvider();
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
-        final Map<String, Object> objects = new HashMap<>();
-        objects.put("sessionManager", sessionManager());
-        objects.put("systemTimeProvider", new BasicSystemTimeProvider());
-
         SystemRepository.load(new ObjectLoader() {
             @Override
             public Map<String, Object> load() {
-                return objects;
+                return applicationContext.getBeansOfType(Object.class);
             }
         });
 

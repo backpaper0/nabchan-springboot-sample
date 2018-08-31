@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Component;
 
@@ -21,8 +22,8 @@ public class SessionAction {
 
     public HttpResponse postEntry(final HttpRequest request, final ExecutionContext context) {
 
-        final BiFunction<HttpRequest, String, Optional<String>> extractor = (req, name) -> Arrays
-                .stream(req.getParam(name)).findFirst();
+        final BiFunction<HttpRequest, String, Optional<String>> extractor = (req, name) -> Optional
+                .ofNullable(req.getParam(name)).map(Arrays::stream).flatMap(Stream::findFirst);
 
         final String name = extractor.apply(request, "name").get();
         final String value = extractor.apply(request, "value").get();
