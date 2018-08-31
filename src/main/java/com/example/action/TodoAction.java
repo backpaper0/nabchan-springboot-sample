@@ -10,7 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nablarch.common.dao.EntityList;
 import nablarch.common.dao.UniversalDao;
-import nablarch.core.beans.BeanUtil;
+import nablarch.core.validation.ValidationContext;
+import nablarch.core.validation.ValidationUtil;
 import nablarch.fw.ExecutionContext;
 import nablarch.fw.web.HttpRequest;
 import nablarch.fw.web.HttpResponse;
@@ -32,8 +33,13 @@ public class TodoAction {
 
     public HttpResponse postCreate(final HttpRequest request, final ExecutionContext context)
             throws JsonProcessingException {
-        final TodoCreationForm form = BeanUtil.createAndCopy(TodoCreationForm.class,
-                request.getParamMap());
+
+        final ValidationContext<TodoCreationForm> validationContext = ValidationUtil
+                .validateAndConvertRequest(TodoCreationForm.class, request, "validate");
+
+        validationContext.abortIfInvalid();
+
+        final TodoCreationForm form = validationContext.createObject();
         final Todo entity = new Todo();
         entity.setContent(form.getContent());
         entity.setDone(false);
