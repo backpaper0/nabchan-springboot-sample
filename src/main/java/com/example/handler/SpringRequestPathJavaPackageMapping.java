@@ -12,7 +12,7 @@ import nablarch.fw.Request;
 import nablarch.fw.handler.RequestPathJavaPackageMapping;
 
 @Component
-@ConfigurationProperties(prefix = "nabchan.mapping")
+@ConfigurationProperties(prefix = "nabchan.action.mapping")
 public class SpringRequestPathJavaPackageMapping extends RequestPathJavaPackageMapping
         implements ApplicationContextAware {
 

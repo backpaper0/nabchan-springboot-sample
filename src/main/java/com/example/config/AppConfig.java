@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
@@ -77,7 +78,7 @@ public class AppConfig implements ApplicationContextAware, InitializingBean {
     }
 
     @Bean
-    public WebFrontController webFrontController() {
+    public FilterRegistrationBean<WebFrontController> webFrontController() {
         final WebFrontController wfc = new WebFrontController();
         final Collection<Handler<?, ?>> handlers = new ArrayList<>();
         handlers.add(new HttpCharacterEncodingHandler());
@@ -89,7 +90,11 @@ public class AppConfig implements ApplicationContextAware, InitializingBean {
         handlers.add(transactionManagementHandler());
         handlers.add(mapping);
         wfc.setHandlerQueue(handlers);
-        return wfc;
+
+        final FilterRegistrationBean<WebFrontController> bean = new FilterRegistrationBean<>();
+        bean.setFilter(wfc);
+        bean.setUrlPatterns(Collections.singleton("/action/*"));
+        return bean;
     }
 
     @Bean
