@@ -19,7 +19,7 @@ public class HelloActionTest {
 
     @Test
     public void message() {
-        final String actual = restTemplate.getForObject("/Hello/message", String.class);
+        final String actual = restTemplate.getForObject("/action/Hello/message", String.class);
         assertEquals("Hello, world!", actual);
     }
 }

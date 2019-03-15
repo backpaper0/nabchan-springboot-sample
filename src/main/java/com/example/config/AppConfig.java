@@ -93,7 +93,7 @@ public class AppConfig implements ApplicationContextAware, InitializingBean {
 
         final FilterRegistrationBean<WebFrontController> bean = new FilterRegistrationBean<>();
         bean.setFilter(wfc);
-        bean.setUrlPatterns(Collections.singleton("/action/*"));
+        bean.addUrlPatterns("/action/*");
         return bean;
     }
 
