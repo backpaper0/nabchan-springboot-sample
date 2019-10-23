@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 
 import javax.persistence.Entity;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import nablarch.common.dao.UniversalDao;
 import nablarch.core.db.DbExecutionContext;
@@ -17,10 +17,10 @@ import nablarch.core.db.statement.BasicSqlLoader;
 import nablarch.core.db.statement.BasicSqlParameterParserFactory;
 import nablarch.core.db.statement.BasicStatementFactory;
 
-public class UniversalDaoTest {
+class UniversalDaoTest {
 
     @Test
-    public void testName() throws Exception {
+    void test() throws Exception {
         try (Connection con0 = DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1",
                 "sa",
                 "secret")) {
