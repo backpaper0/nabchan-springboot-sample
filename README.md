@@ -1,16 +1,16 @@
 # Nabchan Spring Boot Sample
 
 ```console
-mvnw package
+mvn package
 java -jar target/nabchan-springboot-sample-0.0.1-SNAPSHOT.jar
 ```
 
 ```console
-curl localhost:8080/Hello/message
+curl localhost:8080/action/Hello/message
 ```
 
 ```console
-curl localhost:8080/Todo/list
-curl localhost:8080/Todo/create -d content=hoge
+curl localhost:8080/action/Todo/list
+curl localhost:8080/action/Todo/create -d content=hoge
 ```
 
