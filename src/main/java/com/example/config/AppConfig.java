@@ -21,6 +21,7 @@ import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import org.springframework.util.ReflectionUtils;
 
 import com.example.form.Domain;
+import com.example.handler.SpringRequestPathJavaPackageMapping;
 
 import nablarch.common.handler.DbConnectionManagementHandler;
 import nablarch.common.handler.TransactionManagementHandler;
@@ -62,14 +63,11 @@ import nablarch.fw.web.servlet.WebFrontController;
 public class AppConfig implements ApplicationContextAware, InitializingBean {
 
     private final DataSource dataSource;
-    private final RequestPathJavaPackageMapping mapping;
 
     private ApplicationContext applicationContext;
 
-    public AppConfig(final DataSource dataSource,
-            final RequestPathJavaPackageMapping mapping) {
+    public AppConfig(final DataSource dataSource) {
         this.dataSource = dataSource;
-        this.mapping = mapping;
     }
 
     @Override
@@ -88,7 +86,7 @@ public class AppConfig implements ApplicationContextAware, InitializingBean {
         handlers.add(sessionStoreHandler());
         handlers.add(dbConnectionManagementHandler());
         handlers.add(transactionManagementHandler());
-        handlers.add(mapping);
+        handlers.add(mapping());
         wfc.setHandlerQueue(handlers);
 
         final FilterRegistrationBean<WebFrontController> bean = new FilterRegistrationBean<>();
@@ -231,6 +229,12 @@ public class AppConfig implements ApplicationContextAware, InitializingBean {
         vm.setDomainValidationHelper(domainValidationHelper());
         vm.setFormDefinitionCache(formDefinitionCache());
         return vm;
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "nabchan.action.mapping")
+    public RequestPathJavaPackageMapping mapping() {
+        return new SpringRequestPathJavaPackageMapping();
     }
 
     @Override
